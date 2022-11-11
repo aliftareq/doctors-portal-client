@@ -1,15 +1,11 @@
+import { RouterProvider } from 'react-router-dom';
 import './App.css';
+import { router } from './Routers/Routes/Routes';
 
 function App() {
   return (
-    <div className="App">
-      <h1 className="text-3xl font-bold text-green-400 underline">
-        Hello world!
-      </h1>
-      <button className="btn btn-info">Info</button>
-      <button className="btn btn-success">Success</button>
-      <button className="btn btn-warning">Warning</button>
-      <button className="btn btn-error">Error</button>
+    <div className="App max-w-[1440px] mx-auto">
+      <RouterProvider router={router} />
     </div>
   );
 }
