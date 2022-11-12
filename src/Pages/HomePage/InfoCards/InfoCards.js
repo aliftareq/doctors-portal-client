@@ -29,11 +29,14 @@ const InfoCards = () => {
         },
     ]
     return (
-        <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 my-5'>
-            {
-                cardDatas.map(cardData => <Card key={cardData.id} cardData={cardData}></Card>)
-            }
+        <div className='flex justify-center'>
+            <div className='grid grid-cols-1 md:grid-cols-1 lg:grid-cols-3 gap-6 px-3 my-5'>
+                {
+                    cardDatas.map(cardData => <Card key={cardData.id} cardData={cardData}></Card>)
+                }
+            </div>
         </div>
+
     );
 };
 
