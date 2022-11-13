@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PrimaryButton from '../../../Components/PrimaryButton/PrimaryButton';
+import React from 'react';
 import img from '../../../assets/images/chair.png'
 import { DayPicker } from 'react-day-picker';
 import { format } from 'date-fns';
