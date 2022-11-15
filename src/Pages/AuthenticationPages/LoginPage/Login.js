@@ -1,14 +1,39 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const Login = () => {
+    //context value 
+    const { signIn } = useContext(AuthContext)
+    //states
+    const [loginError, setloginError] = useState()
+
+    //navigation
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location?.state?.from?.pathname || '/'
+
+    //react form hook
     const { register, formState: { errors }, handleSubmit } = useForm()
 
     //handlers
     const handleLogin = (data) => {
         // e.preventDefault()
         console.log(data);
+        signIn(data.email, data.password)
+            .then(result => {
+                const user = result.user
+                console.log(user);
+                setloginError('')
+                toast.success('Successfully logged in')
+                navigate(from, { replace: true })
+            })
+            .catch(err => {
+                console.error(err)
+                setloginError(err.message)
+            })
     }
     return (
         <section className='h-[500px] lg:h-[600px] flex justify-center items-center'>
@@ -44,6 +69,9 @@ const Login = () => {
                         </label>
                     </div>
                     <input className='btn btn-accent w-full' value='Login' type="submit" />
+                    <div>
+                        {loginError && <p className='text-red-400'>{loginError}</p>}
+                    </div>
                 </form>
                 <p className='text-center mt-3'>New to Doctors Portal?
                     <span className='text-secondary ml-2 underline block lg:inline'>

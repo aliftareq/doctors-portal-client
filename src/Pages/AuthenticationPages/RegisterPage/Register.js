@@ -1,13 +1,44 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const Register = () => {
+    //context values 
+    const { createUser, updateUser } = useContext(AuthContext)
+    //states
+    const [signUpError, setSignUpError] = useState('')
+    //react form hook
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     //handlers
     const handleRegister = (data) => {
         console.log(data);
+
+        //handlers
+        createUser(data.email, data.password)
+            .then(result => {
+                const user = result.user
+                console.log(user);
+                const userInfo = {
+                    displayName: data.name
+                }
+                console.log(userInfo);
+                updateUser(userInfo)
+                    .then(() => {
+                        setSignUpError('')
+                        toast.success('user created succesfully')
+                    })
+                    .catch(err => {
+                        console.error(err)
+                        setSignUpError(err.message)
+                    })
+            })
+            .catch(err => {
+                console.error(err)
+                setSignUpError(err.message)
+            })
     }
     return (
         <section className='h-[600px] lg:h-[700px] flex justify-center items-center'>
@@ -50,12 +81,15 @@ const Register = () => {
                             {...register("password", {
                                 required: 'Password is required',
                                 minLength: { value: 6, message: 'Password must be 6 char or longer' },
-                                pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/, message: 'password must be strong' }
+                                pattern: { value: /(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])/, message: 'password must have a uppercase , lowercase and special character.' }
                             })}
                         />
                         {errors.password && <p className='text-red-400' role="alert">{errors.password?.message}</p>}
                     </div>
                     <input className='btn btn-accent w-full mt-4' value='Register' type="submit" />
+                    <div className='mt-3'>
+                        {signUpError && <p className='text-red-400'>{signUpError}</p>}
+                    </div>
                 </form>
                 <p className='text-center mt-3'>Already have an account?
                     <span className='text-secondary ml-2 underline block lg:inline'>

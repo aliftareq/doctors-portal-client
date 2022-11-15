@@ -1,16 +1,49 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const NavBar = () => {
+    //context values
+    const { user, logOut } = useContext(AuthContext)
+    //handlers 
+    const handleLogOut = () => {
+        logOut()
+            .then(() => {
+                toast.info('successfully logged out')
+            })
+            .catch(err => {
+                console.error(err)
+                toast.error('something went wrong')
+            })
+    }
     const menuItems =
         <React.Fragment>
             <li><Link to='/'>Home</Link></li>
-            <li><Link to='/about'>About</Link></li>
             <li><Link to='/appointment'>Appointment</Link></li>
-            <li><Link to='/reviews'>Reviews</Link></li>
-            <li><Link to='/contact-us'>Contact Us</Link></li>
-            <li><Link to='/login'>Login</Link></li>
-            <li><Link className="btn btn-primary rounded-md" to='/register'>Register</Link></li>
+            <li><Link to='/about'>About</Link></li>
+            {/* <li><Link to='/contact-us'>Contact Us</Link></li> */}
+            {
+                user?.uid
+                    ?
+                    <>
+                        <li><Link to='/dashboard'>DashBoard</Link></li>
+                        <li>
+                            <Link to='/'>
+                                {user?.displayName ? user?.displayName : 'Annonymous'}
+                            </Link>
+                        </li>
+                        <li onClick={handleLogOut}><Link className="btn btn-primary rounded-md" to='/login'>Logout</Link></li>
+                    </>
+                    :
+                    <>
+                        <li><Link to='/login'>Login</Link></li>
+                        <li>
+                            <Link className="btn btn-primary rounded-md" to='/register'>Register
+                            </Link>
+                        </li>
+                    </>
+            }
         </React.Fragment>
     return (
         <div className="navbar bg-base-100 flex justify-between">
