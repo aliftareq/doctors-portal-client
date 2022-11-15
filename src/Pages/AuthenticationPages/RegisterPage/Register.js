@@ -1,14 +1,20 @@
 import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const Register = () => {
     //context values 
-    const { createUser, updateUser } = useContext(AuthContext)
+    const { createUser, updateUser, LoginWithGoogle } = useContext(AuthContext)
     //states
     const [signUpError, setSignUpError] = useState('')
+
+    //navigation
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location?.state?.from?.pathname || '/'
+
     //react form hook
     const { register, handleSubmit, formState: { errors } } = useForm()
 
@@ -16,7 +22,7 @@ const Register = () => {
     const handleRegister = (data) => {
         console.log(data);
 
-        //handlers
+        //creating user func
         createUser(data.email, data.password)
             .then(result => {
                 const user = result.user
@@ -38,6 +44,20 @@ const Register = () => {
             .catch(err => {
                 console.error(err)
                 setSignUpError(err.message)
+            })
+    }
+
+    //handler for social login
+    const handleGoogleSignIn = () => {
+        LoginWithGoogle()
+            .then(result => {
+                console.log(result.user);
+                toast.success('successfully sign-In with google')
+                navigate(from, { replace: true })
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error(err.message)
             })
     }
     return (
@@ -97,7 +117,7 @@ const Register = () => {
                     </span>
                 </p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline  w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handleGoogleSignIn} className='btn btn-outline  w-full'>CONTINUE WITH GOOGLE</button>
             </div>
         </section>
     );

@@ -6,7 +6,7 @@ import { AuthContext } from '../../../Contexts/AuthProvider';
 
 const Login = () => {
     //context value 
-    const { signIn } = useContext(AuthContext)
+    const { signIn, LoginWithGoogle } = useContext(AuthContext)
     //states
     const [loginError, setloginError] = useState()
 
@@ -33,6 +33,19 @@ const Login = () => {
             .catch(err => {
                 console.error(err)
                 setloginError(err.message)
+            })
+    }
+    //handler for social login
+    const handleGoogleSignIn = () => {
+        LoginWithGoogle()
+            .then(result => {
+                console.log(result.user);
+                toast.success('successfully sign-In with google')
+                navigate(from, { replace: true })
+            })
+            .catch(err => {
+                console.log(err);
+                toast.error(err.message)
             })
     }
     return (
@@ -79,7 +92,7 @@ const Login = () => {
                     </span>
                 </p>
                 <div className="divider">OR</div>
-                <button className='btn btn-outline  w-full'>CONTINUE WITH GOOGLE</button>
+                <button onClick={handleGoogleSignIn} className='btn btn-outline  w-full'>CONTINUE WITH GOOGLE</button>
             </div>
         </section>
     );
