@@ -30,10 +30,10 @@ const Register = () => {
                 const userInfo = {
                     displayName: data.name
                 }
-                console.log(userInfo);
                 updateUser(userInfo)
                     .then(() => {
                         setSignUpError('')
+                        navigate(from, { replace: true })
                         toast.success('user created succesfully')
                     })
                     .catch(err => {

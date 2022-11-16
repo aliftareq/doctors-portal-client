@@ -1,24 +1,38 @@
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import LoadingSpinner from '../../Shared/LoadingSpinner/LoadingSpinner';
 import BookingModal from '../BookingModal/BookingModal';
 import AppointmentOption from './AppointmentOption/AppointmentOption';
 
 const AvailableAppointments = ({ selectedDate }) => {
     //states
-    const [appointments, setAppointments] = useState([])
     const [treatment, setTreatment] = useState({})
 
-    useEffect(() => {
-        fetch('appointmentOptions.json')
-            .then(res => res.json())
-            .then(data => {
-                //console.log(data);
-                setAppointments(data)
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }, [])
+    //formating date
+    const date = format(selectedDate, 'PP')
+
+    //query for loading data (process - 1)
+    // const { data: appointments = [] } = useQuery({
+    //     queryKey: ['appointmentOptions'],
+    //     queryFn: () => fetch('http://localhost:5000/appointmentOptions')
+    //         .then(res => res.json())
+    // })
+
+    //query for loading data (process - 2)
+    const { data: appointments = [], isLoading, refetch } = useQuery({
+        queryKey: ['appointmentOptions', date],
+        queryFn: async () => {
+            const res = await fetch(`http://localhost:5000/v2/appointmentOptions?date=${date}`)
+            const data = await res.json()
+            return data
+        }
+    })
+
+    if (isLoading) {
+        return <LoadingSpinner></LoadingSpinner>
+    }
+
     return (
         <section className='my-5 lg:my-10'>
             <div className='lg:my-20'>
@@ -43,6 +57,7 @@ const AvailableAppointments = ({ selectedDate }) => {
                     selectedDate={selectedDate}
                     treatment={treatment}
                     setTreatment={setTreatment}
+                    refetch={refetch}
                 ></BookingModal>
             }
         </section>
