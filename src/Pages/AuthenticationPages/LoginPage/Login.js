@@ -10,7 +10,7 @@ const Login = () => {
     const { signIn, LoginWithGoogle } = useContext(AuthContext)
     //states
     const [loginError, setloginError] = useState()
-    const [loginUserEmail, setLoginUserEmail] = useState()
+    const [loginUserEmail, setLoginUserEmail] = useState('')
 
     //token hook
     const [token] = useToken(loginUserEmail)
@@ -30,7 +30,7 @@ const Login = () => {
 
     //handlers
     const handleLogin = (data) => {
-        // e.preventDefault()
+
         console.log(data);
         signIn(data.email, data.password)
             .then(result => {

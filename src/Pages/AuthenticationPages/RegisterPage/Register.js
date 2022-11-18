@@ -82,8 +82,8 @@ const Register = () => {
         LoginWithGoogle()
             .then(result => {
                 console.log(result.user);
+                saveUserInDB(result.user.displayName, result.user.email)
                 toast.success('successfully sign-In with google')
-                navigate(from, { replace: true })
             })
             .catch(err => {
                 console.log(err);
