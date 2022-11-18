@@ -3,17 +3,27 @@ import { useForm } from 'react-hook-form';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AuthContext } from '../../../Contexts/AuthProvider';
+import useToken from '../../../Hooks/useToken';
 
 const Register = () => {
     //context values 
     const { createUser, updateUser, LoginWithGoogle } = useContext(AuthContext)
     //states
     const [signUpError, setSignUpError] = useState('')
+    const [createdUserEmail, setCreatedUserEmail] = useState('')
+
+    //getting access token
+    const [token] = useToken(createdUserEmail)
 
     //navigation
     const navigate = useNavigate()
     const location = useLocation()
     const from = location?.state?.from?.pathname || '/'
+
+    //navigating
+    if (token) {
+        navigate(from, { replace: true })
+    }
 
     //react form hook
     const { register, handleSubmit, formState: { errors } } = useForm()
@@ -33,7 +43,7 @@ const Register = () => {
                 updateUser(userInfo)
                     .then(() => {
                         setSignUpError('')
-                        navigate(from, { replace: true })
+                        saveUserInDB(data.name, data.email)
                         toast.success('user created succesfully')
                     })
                     .catch(err => {
@@ -46,6 +56,26 @@ const Register = () => {
                 setSignUpError(err.message)
             })
     }
+
+    //send user data to database
+    const saveUserInDB = (name, email) => {
+        const user = { name, email }
+        fetch(`http://localhost:5000/users`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(user)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log('saveUser', data);
+                setCreatedUserEmail(email)
+            })
+    }
+
+
+
 
     //handler for social login
     const handleGoogleSignIn = () => {

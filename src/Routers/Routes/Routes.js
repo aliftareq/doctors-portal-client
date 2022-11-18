@@ -1,11 +1,14 @@
 import { createBrowserRouter } from "react-router-dom";
+import DashBoardLayout from "../../Layout/DashBoardLayout";
 import Main from "../../Layout/Main";
 import Appointment from "../../Pages/AppointmentPage/Appointment/Appointment";
 import Login from "../../Pages/AuthenticationPages/LoginPage/Login";
 import Register from "../../Pages/AuthenticationPages/RegisterPage/Register";
-import DashBoard from "../../Pages/DashBoardPage/DashBoard/DashBoard";
+import AllUsers from "../../Pages/DashBoardPage/AllUsers/AllUsers";
+import MyAppointments from "../../Pages/DashBoardPage/MyAppointments/MyAppointments";
 import Home from "../../Pages/HomePage/Home/Home";
 import ErrorPage from "../../Pages/Shared/ErrorPage/ErrorPage";
+import AdminRoute from "../AdminRoute/AdminRoute";
 import PrivateRoutes from "../PrivateRoutes/PrivateRoutes";
 
 export const router = createBrowserRouter([
@@ -34,6 +37,16 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <PrivateRoutes><DashBoard></DashBoard></PrivateRoutes>
+        element: <PrivateRoutes><DashBoardLayout></DashBoardLayout></PrivateRoutes>,
+        children: [
+            {
+                path: '/dashboard',
+                element: <MyAppointments></MyAppointments>
+            },
+            {
+                path: '/dashboard/users',
+                element: <AdminRoute><AllUsers></AllUsers></AdminRoute>
+            },
+        ]
     }
 ])
