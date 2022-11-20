@@ -21,9 +21,12 @@ const DashBoardLayout = () => {
                         {/* <!-- Sidebar content here --> */}
                         <li><Link to='/dashboard'>My Appointments</Link></li>
                         {
-                            isAdmin
-                                ? <li><Link to='/dashboard/users'>All Users</Link></li>
-                                : ''
+                            isAdmin &&
+                            <>
+                                <li><Link to='/dashboard/users'>All Users</Link></li>
+                                <li><Link to='/dashboard/add-doctor'>Add Doctor</Link></li>
+                                <li><Link to='/dashboard/manage-doctors'>Manage Doctors</Link></li>
+                            </>
                         }
                     </ul>
                 </div>
