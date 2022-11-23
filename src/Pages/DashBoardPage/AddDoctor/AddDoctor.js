@@ -21,7 +21,7 @@ const AddDoctor = () => {
     const { data: specialtyOptions, isLoading } = useQuery({
         queryKey: ['appointmentSpecialty'],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/appointmentSpecialty`)
+            const res = await fetch(`https://doctors-portal-server-lyart-eight.vercel.app/appointmentSpecialty`)
             const data = await res.json()
             return data
         }
@@ -60,7 +60,7 @@ const AddDoctor = () => {
                     }
                     //console.log(doctor);
                     //save doctor info to database
-                    fetch(`http://localhost:5000/doctors`, {
+                    fetch(`https://doctors-portal-server-lyart-eight.vercel.app/doctors`, {
                         method: 'POST',
                         headers: {
                             'content-type': 'application/json',

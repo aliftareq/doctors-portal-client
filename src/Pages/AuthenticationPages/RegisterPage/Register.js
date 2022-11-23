@@ -60,7 +60,7 @@ const Register = () => {
     //send user data to database
     const saveUserInDB = (name, email) => {
         const user = { name, email }
-        fetch(`http://localhost:5000/users`, {
+        fetch(`https://doctors-portal-server-lyart-eight.vercel.app/users`, {
             method: 'POST',
             headers: {
                 'content-type': 'application/json'

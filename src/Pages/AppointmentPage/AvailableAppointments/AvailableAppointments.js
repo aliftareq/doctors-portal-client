@@ -15,7 +15,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     //query for loading data (process - 1)
     // const { data: appointments = [] } = useQuery({
     //     queryKey: ['appointmentOptions'],
-    //     queryFn: () => fetch('http://localhost:5000/appointmentOptions')
+    //     queryFn: () => fetch('https://doctors-portal-server-lyart-eight.vercel.app/appointmentOptions')
     //         .then(res => res.json())
     // })
 
@@ -23,7 +23,7 @@ const AvailableAppointments = ({ selectedDate }) => {
     const { data: appointments = [], isLoading, refetch } = useQuery({
         queryKey: ['appointmentOptions', date],
         queryFn: async () => {
-            const res = await fetch(`http://localhost:5000/v2/appointmentOptions?date=${date}`)
+            const res = await fetch(`https://doctors-portal-server-lyart-eight.vercel.app/v2/appointmentOptions?date=${date}`)
             const data = await res.json()
             return data
         }
